@@ -1,8 +1,14 @@
 <template>
-  <div class="customBox">
-    <ul class="people" v-for="(p, index) in dataList" :key="index">
+  <div class="customBox d-flex flex-column">
+    <ul
+      class="people"
+      v-for="(p, index) in dataList"
+      :key="index"
+      @mouseenter="currentIndex = index"
+      @mouseleave="currentIndex = 'home'"
+    >
       <li class="peopleList">
-        <i class="iconfont icon-ziyuanldpi"></i>
+        <i :class="['iconfont', items[index].icon]"></i>
         <router-link
           :to="{
             name: 'timeBar',
@@ -10,22 +16,23 @@
               people: p.people,
             },
           }"
-          @click.native="isChoose"
           >{{ p.people }}
         </router-link>
       </li>
-      <li class="showBooksBox">
-        <div class="showBooks" v-for="(k, index) in p.kemu" :key="index">
-          <div class="imgBox">
-            <img src="../statics/img/book.png" alt="" />{{ k.subject }}
-          </div>
-          <div class="bookBox">
-            <div class="books" v-for="(t, index) in k.type" :key="index">
-              {{ t }}
+      <collapse>
+        <li class="showBooksBox" v-show="isActive(index)">
+          <div class="showBooks" v-for="(k, index) in p.kemu" :key="index">
+            <div class="imgBox">
+              <img src="../statics/img/book.png" alt="" />{{ k.subject }}
+            </div>
+            <div class="bookBox">
+              <div class="books" v-for="(t, index) in k.type" :key="index">
+                {{ t }}
+              </div>
             </div>
           </div>
-        </div>
-      </li>
+        </li>
+      </collapse>
     </ul>
     <div v-if="getChoose">
       <router-view></router-view>
@@ -35,32 +42,49 @@
 
 <script>
 import { mapState } from "vuex";
+import collapse from "../plugins/collapse";
 export default {
   name: "customProject",
   data() {
     return {
+      items: [
+        { icon: "icon-ziyuanldpi", label: "考公" },
+        { icon: "icon-yanjiusheng", label: "考研" },
+        { icon: "icon-daxue", label: "大学" },
+        { icon: "icon-shuben" },
+      ],
       people: "",
+      currentIndex: "home",
     };
   },
+  components: {
+    collapse,
+  },
   computed: {
-    getChoose(){
-      let choose = localStorage.getItem('choose') || true;
+    getChoose() {
+      let choose = localStorage.getItem("choose") || true;
       return choose;
     },
     ...mapState({ dataList: "dataList" }),
   },
   methods: {
-    isChoose(){
-      localStorage.setItem('choose',true);
-    }
+    isChoose() {
+      localStorage.setItem("choose", true);
+    },
+    isActive(index) {
+      if (this.currentIndex === index) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
 .customBox {
-  display: flex;
-  flex-direction: column;
+  height: 700px;
   .people:nth-child(1) {
     margin-top: 50px;
   }
@@ -80,7 +104,6 @@ export default {
       padding-left: 40px;
       height: 100px;
       border: 2px solid grey;
-      background: #000;
       i {
         font-size: 60px;
         margin-right: 10px;
@@ -95,22 +118,16 @@ export default {
     .peopleList:hover {
       background: linear-gradient(to right, black, #0f0948) !important;
     }
-    .peopleList:hover ~ .showBooksBox {
-      height: 200px;
-      top: 0;
-      transform: top;
-    }
-
     .showBooksBox {
       position: relative;
       z-index: 10;
-      top: -140px;
+      top: 0px;
       display: flex;
       justify-content: start;
       align-items: center;
       padding-top: 20px;
       padding-bottom: 20px;
-      height: 100px;
+      height: 200px;
       border: 1px solid grey;
       transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       .showBooks {

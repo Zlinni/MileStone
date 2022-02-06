@@ -11,13 +11,12 @@ export default new vuerouter({
         {
             path:'/studyProject',
             component:studyProject,
-            meta:{title:'里程碑',subtitle:'现在开始你的学习计划',currentIndex:0}
-
+            meta:{title:'里程碑',subtitle:'现在开始你的学习计划',currentIndex:0},
         },
         {
             path:'/customProject',
             component:customProject,
-            meta:{title:'选择一项计划快速开始',subtitle:'',currentIndex:2},
+            meta:{title:'选择一项计划快速开始',currentIndex:2},
             children:[{
                 name:'timeBar',
                 path:'timeBar/:people',

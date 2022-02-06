@@ -1,24 +1,40 @@
 <template>
-  <div class="navi">
-    <div class="navTab">
-      <router-link class="navTabItem" v-for="(item,index) in items" :key="index"  :to="item.paths">
-        <i :class="['navTabItem_icon', 'iconfont', item.icon]"></i>
-        <p class="navTabItem_label">{{
-          item.label
-        }}</p>
-      </router-link>
-      <div class="tab" :style="{left:currentIndex * 220 + 'px'}" v-if="!isNaN(currentIndex)"></div>
-    </div>
-    <div class="calender">
-      <a href="#">日历</a>
-    </div>
-    <div class="memo">
-      <a href="#">备忘录</a>
-    </div>
-  </div>
+  <v-container fluid class="navi">
+    <v-row justify="space-between">
+      <v-col class="navTab" md="5">
+        <router-link
+          class="navTabItem"
+          v-for="(item, index) in items"
+          :key="index"
+          :to="item.paths"
+        >
+          <i :class="['navTabItem_icon', 'iconfont', item.icon]"></i>
+          <p class="navTabItem_label">{{ item.label }}</p>
+        </router-link>
+        <div
+          class="tab"
+          :style="{ left: currentIndex * 202 + 'px' }"
+          v-if="!isNaN(currentIndex)"
+        ></div>
+      </v-col>
+      <v-col class="calender" md="3">
+        <p>日历</p>
+        <i class="iconfont icon-xiala" @click="isActive = !isActive"></i>
+        <collapse>
+          <calendars v-show="isActive"></calendars>
+        </collapse>
+      </v-col>
+      <v-col class="memo" md="3">
+        <p>备忘录</p>
+        <i class="iconfont icon-xiala" @click="isActive"></i>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
+import calendars from "../components/calendars.vue";
+import collapse from "../plugins/collapse";
 export default {
   data() {
     return {
@@ -27,32 +43,30 @@ export default {
         { icon: "icon-zongjie", label: "今日总结", paths: "/summary" },
         { icon: "icon-shouye", label: "自定义计划", paths: "/customProject" },
       ],
+      isActive: false,
     };
   },
-  computed:{
-    currentIndex(){
+  components: {
+    calendars,
+    collapse,
+  },
+  computed: {
+    currentIndex() {
       return this.$route.meta.currentIndex;
-    }
-  },
-  methods: {
-  },
-  mounted() {
+    },
   },
 };
 </script>
 
 <style scoped lang="less">
 .navi {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100px;
+  margin-top: 20px;
+  margin-bottom: 50px;
   .navTab {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 650px;
     height: 40px;
     border: 1px solid grey;
     border-radius: 6px;
@@ -65,7 +79,7 @@ export default {
       position: absolute;
       z-index: 2;
       left: 0.5%;
-      width: 213px;
+      width: 188px;
       height: 30px;
       background: #2a1e96 !important;
       border-radius: 6px;
@@ -78,28 +92,56 @@ export default {
       display: flex;
       justify-content: start;
       align-items: center;
-      width: 212px;
+      width: 188px;
       height: 30px;
       border: 1px solid grey;
       border-radius: 6px;
     }
-    .navTabItem_icon{
-      margin-left: 50px;
+    .navTabItem_icon {
+      margin-left: 38px;
     }
-    .navTabItem_label{
+    .navTabItem_label {
       margin-left: 20px;
     }
   }
   .calender,
   .memo {
+    position: relative;
+    z-index: 2;
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
-    width: 350px;
     height: 40px;
     border: 1px solid grey;
     border-radius: 6px;
     padding-left: 20px;
+    .icon-xiala {
+      cursor: pointer;
+    }
   }
+}
+@keyframes enter {
+  from {
+    display: none;
+  }
+  to {
+    display: block;
+  }
+}
+@keyframes leave {
+  from {
+    height: 300px;
+  }
+  to {
+    height: 0;
+  }
+}
+/* 来的时候 */
+.v-enter-active {
+  animation: enter 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+/* 去的时候 */
+.v-leave-active {
+  animation: leave 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 </style>

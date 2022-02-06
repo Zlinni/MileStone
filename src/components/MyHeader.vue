@@ -1,7 +1,7 @@
 <template>
-  <div class="header">
-    <div class="logo">
-      <img src="../statics/img/学习.png" alt="" />
+  <v-container fluid class="header">
+    <div class="logo text-h5 font-weight-bold">
+      <i class="iconfont icon-xuexi"></i>
       MileStone
     </div>
     <div class="switch">
@@ -10,9 +10,9 @@
     </div>
     <div class="menu"><a href="#">菜单</a></div>
     <div class="iconAvatar">
-      <img src="../statics/img/头像.png" alt="" width="25px" height="25px" />
+      <i class="iconfont icon-user"></i>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -22,44 +22,34 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: white;
+  .switch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 210px;
+    height: 50px;
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100px;
+      border-radius: 6px;
+      border: 1px solid grey;
+      background-color: black;
+    }
+    a:hover {
+      background-color: #5124de;
+      transition: background-color 0.5s ease-in-out;
+    }
+  }
 }
-.logo {
-  font-size: 25px;
-  font-weight: 700;
-}
-.logo img {
-  width: 25px;
-  height: 25px;
-  background-color: #fff;
-}
-.switch {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 210px;
-  height: 50px;
-}
-.switch a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  border-radius: 6px;
-  border: 1px solid grey;
-  background-color: black;
-}
-
-.switch a:hover {
-  background-color: #5124de;
-  transition: background-color 0.5s ease-in-out;
-}
-.iconAvatar img {
-  background-color: #fff;
+.iconfont{
+  font-size: 32px;
 }
 </style>

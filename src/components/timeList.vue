@@ -31,12 +31,21 @@
           {{ t.time }}
         </td>
         <td v-show="t.edit">
-          <input
-            type="text"
-            :placeholder="t.time"
-            style="width: 100px"
-            ref="inputTask"
-          />
+          <v-dialog>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn light depressed v-on="on" v-bind="attrs">设置时间</v-btn>
+            </template>
+            <v-row justify="space-around" align="center">
+              <v-col style="width: 350px; flex: 0 1 auto">
+                <h2>Start:</h2>
+                <v-time-picker v-model="start" :max="end" light></v-time-picker>
+              </v-col>
+              <v-col style="width: 350px; flex: 0 1 auto">
+                <h2>End:</h2>
+                <v-time-picker v-model="end" :min="start" light></v-time-picker>
+              </v-col>
+            </v-row>
+          </v-dialog>
         </td>
         <td
           v-show="!t.edit"
@@ -78,12 +87,14 @@
 
 <script>
 export default {
-  props: ["subject", "people"],
   data() {
     return {
-      currentIndex: "home",
+      currentIndex: "reset",
+      start: null,
+      end: null,
     };
   },
+  props: ["subject", "people"],
   computed: {
     typeList() {
       let res = [];
@@ -109,9 +120,13 @@ export default {
     },
     editFinish(typeList, typeId) {
       typeList.edit = false;
-      var typeValue = this.$refs.inputTask.reduce((res, item) => {
-        return res.concat(item.value.trim());
+      var defaultValue = ["新任务", "暂无"];
+      var typeValue = this.$refs.inputTask.reduce((res, item, index) => {
+        return index < 2
+          ? res.concat(item.value.trim() || defaultValue[index])
+          : res;
       }, []);
+      typeValue.push(this.start+'-'+this.end);
       this.$store.commit("updatedType", [
         this.people,
         this.subject,
@@ -121,7 +136,11 @@ export default {
     },
     isDelete(typeId) {
       this.$store.commit("deleteType", [this.people, this.subject, typeId]);
+      this.currentIndex = "home";
     },
+  },
+  mounted() {
+    this.currentIndex = "reset";
   },
 };
 </script>
@@ -131,21 +150,26 @@ export default {
   position: relative;
   margin-top: 10px;
   margin-bottom: 10px;
-  .typeOption td {
-    width: 150px;
-    height: 60px;
-    border-bottom: 1px solid #bbb8b8;
+  .typeList {
+    td {
+      position: relative;
+      z-index: 3;
+      width: 150px;
+      height: 60px;
+      border-bottom: 1px solid rgb(231, 228, 228);
+      .iconfont {
+        margin-right: 5px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+    }
   }
-  .typeList td {
-    position: relative;
-    z-index: 3;
-    width: 150px;
-    height: 60px;
-    border-bottom: 1px solid rgb(231, 228, 228);
-    .iconfont {
-      margin-right: 5px;
-      font-size: 20px;
-      cursor: pointer;
+  .typeOption {
+    td {
+      width: 150px;
+      height: 60px;
+      border-bottom: 1px solid #bbb8b8;
     }
   }
   .tab {

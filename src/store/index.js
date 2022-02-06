@@ -36,13 +36,13 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
           {
             id: '002',
             type: "线性代数",
-            time: '13:00-15:00',
+            time: '15:00-16:00',
             remarks: '暂无'
           },
           {
             id: '003',
             type: "概率论",
-            time: '13:00-15:00',
+            time: '16:00-17:00',
             remarks: '暂无'
           }
         ]
@@ -52,7 +52,7 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
         typeList: [{
           id: '001',
           type: "英语",
-          time: '13:00-15:00',
+          time: '18:00-19:00',
           remarks: '暂无'
         }]
       },
@@ -61,7 +61,7 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
         typeList: [{
           id: '001',
           type: "政治",
-          time: '13:00-15:00',
+          time: '9:00-10:00',
           remarks: '暂无'
         }]
       },
@@ -70,25 +70,25 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
         typeList: [{
             id: '001',
             type: "数据结构",
-            time: '13:00-15:00',
+            time: '10:00-10:30',
             remarks: '暂无'
           },
           {
             id: '002',
             type: "计算机组成原理",
-            time: '13:00-15:00',
+            time: '10:30-10:40',
             remarks: '暂无'
           },
           {
             id: '003',
             type: "计算机网络",
-            time: '13:00-15:00',
+            time: '10:40-10:41',
             remarks: '暂无'
           },
           {
             id: '004',
             type: "操作系统",
-            time: '13:00-15:00',
+            time: '10:41-10:42',
             remarks: '暂无'
           }
         ],
@@ -167,6 +167,7 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
     ],
   },
 ];
+var typeList = [];
 import {
   nanoid
 } from 'nanoid';
@@ -185,8 +186,8 @@ const mutations = {
             kemu.typeList.forEach(typelist => {
               if (typelist.id === typeId) {
                 Vue.set(typelist, 'type',typeValue[0]);
-                Vue.set(typelist, 'time',typeValue[1]);
-                Vue.set(typelist, 'remarks',typeValue[2]);
+                Vue.set(typelist, 'time',typeValue[2]);
+                Vue.set(typelist, 'remarks',typeValue[1]);
               }
             })
           }
@@ -229,11 +230,22 @@ const mutations = {
       }
     });
     localStorage.setItem('dataList', JSON.stringify(state.dataList));
-  }
+  },
+  transType(state,people){
+    state.dataList.forEach(data => {
+      if (data.people === people) {
+        data.kemu.forEach(kemu => {
+            console.log(kemu.typeList)
+        })
+      }
+    });
+    console.log(state.typeList);
+  },
 };
 
 const state = {
-  dataList: dataList
+  dataList: dataList,
+  typeList: typeList
 };
 
 // 创建并暴露store

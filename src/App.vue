@@ -1,10 +1,12 @@
 <template>
-  <div id="app">
+  <v-app>
     <myheader></myheader>
     <navi></navi>
-    <intro></intro>
+    <transition>
+      <intro></intro>
+    </transition>
     <router-view></router-view>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -31,7 +33,7 @@ body {
   padding-left: 50px;
   padding-right: 50px;
   overflow-x: hidden;
-  background: black;
+  background: black !important;
   color: white;
 }
 body::-webkit-scrollbar {
@@ -39,21 +41,32 @@ body::-webkit-scrollbar {
 }
 a {
   text-decoration: none;
-  color: white;
+  color: white !important;
 }
-li {
-  list-style: none;
+p {
+  margin-bottom: 0 !important;
 }
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
+.v-application ol,
+.v-application ul {
+  padding-left: 0 !important;
 }
-input {
-  background: none;
-  outline: none;
-  border: none;
-}
-
 #app {
+  background: black !important;
+}
+@keyframes enter {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+/* 来的时候 */
+.v-enter-active {
+  animation: enter 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+/* 去的时候 */
+.v-leave-active {
+  animation: enter 0.6s reverse;
 }
 </style>
