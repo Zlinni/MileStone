@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "echarts": "^5.3.0",
     "less-loader": "^6.2.0",
     "nanoid": "^3.2.0",
+    "pubsub-js": "^1.9.4",
     "vue": "^2.6.11",
+    "vue-clock-lonlyape": "^1.2.1",
     "vue-router": "^3.5.3",
     "vuetify": "^2.6.2",
     "vuex": "^3.6.2"

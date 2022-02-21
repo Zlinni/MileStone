@@ -1,10 +1,20 @@
 <template>
   <v-app>
-    <myheader></myheader>
+    <myheader :clockChoose="clockChoose"></myheader>
     <navi></navi>
     <transition>
       <intro></intro>
     </transition>
+    <v-expand-transition>
+      <vueClock
+        v-if="isClock"
+        :height="500"
+        :dial="yanse"
+        :border="yanse"
+        :number="yanse"
+        :needle="needYanse"
+      ></vueClock>
+    </v-expand-transition>
     <router-view></router-view>
   </v-app>
 </template>
@@ -13,12 +23,39 @@
 import myheader from "./components/MyHeader";
 import navi from "./components/Navigation";
 import intro from "./components/Introduce";
+import vueClock from "./components/clock.vue";
+
 export default {
   name: "App",
+  data() {
+    return {
+      isClock: false,
+      yanse: {
+        color: "white",
+      },
+      needYanse: {
+        second: {
+          color: "white",
+        },
+        minute: {
+          color: "white",
+        },
+        hour: {
+          color: "white",
+        },
+      },
+    };
+  },
   components: {
     myheader,
     navi,
     intro,
+    vueClock,
+  },
+  methods: {
+    clockChoose() {
+      return (this.isClock = !this.isClock);
+    },
   },
 };
 </script>
@@ -49,6 +86,9 @@ p {
 .v-application ol,
 .v-application ul {
   padding-left: 0 !important;
+}
+.v-dialog {
+  overflow: hidden !important;
 }
 #app {
   background: black !important;

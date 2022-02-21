@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="navi">
     <v-row justify="space-between">
-      <v-col class="navTab" md="5">
+      <v-col class="navTab" md="5" sm="12">
         <router-link
           class="navTabItem"
           v-for="(item, index) in items"
@@ -13,20 +13,23 @@
         </router-link>
         <div
           class="tab"
-          :style="{ left: currentIndex * 202 + 'px' }"
+          :style="{ left: currentIndex * 33.5 + '%' }"
           v-if="!isNaN(currentIndex)"
         ></div>
       </v-col>
-      <v-col class="calender" md="3">
+      <v-col class="calender" md="3" sm="6">
         <p>日历</p>
-        <i class="iconfont icon-xiala" @click="isActive = !isActive"></i>
-        <collapse>
-          <calendars v-show="isActive"></calendars>
-        </collapse>
+        <i class="iconfont icon-xiala" @click="calActive = !calActive"></i>
+        <v-expand-transition>
+          <calendars v-show="calActive"></calendars>
+        </v-expand-transition>
       </v-col>
-      <v-col class="memo" md="3">
+      <v-col class="memo" md="3" sm="6">
         <p>备忘录</p>
-        <i class="iconfont icon-xiala" @click="isActive"></i>
+        <i class="iconfont icon-xiala" @click="todoActive=!todoActive"></i>
+        <v-expand-transition>
+          <todo-list v-show="todoActive"></todo-list>
+        </v-expand-transition>
       </v-col>
     </v-row>
   </v-container>
@@ -34,7 +37,7 @@
 
 <script>
 import calendars from "../components/calendars.vue";
-import collapse from "../plugins/collapse";
+import todoList from "../components/TodoList.vue";
 export default {
   data() {
     return {
@@ -43,12 +46,13 @@ export default {
         { icon: "icon-zongjie", label: "今日总结", paths: "/summary" },
         { icon: "icon-shouye", label: "自定义计划", paths: "/customProject" },
       ],
-      isActive: false,
+      calActive: false,
+      todoActive:false
     };
   },
   components: {
     calendars,
-    collapse,
+    todoList,
   },
   computed: {
     currentIndex() {
@@ -79,7 +83,7 @@ export default {
       position: absolute;
       z-index: 2;
       left: 0.5%;
-      width: 188px;
+      width: 33%;
       height: 30px;
       background: #2a1e96 !important;
       border-radius: 6px;
@@ -90,15 +94,12 @@ export default {
       position: relative;
       z-index: 3;
       display: flex;
-      justify-content: start;
+      justify-content: center;
       align-items: center;
-      width: 188px;
+      width: 33%;
       height: 30px;
       border: 1px solid grey;
       border-radius: 6px;
-    }
-    .navTabItem_icon {
-      margin-left: 38px;
     }
     .navTabItem_label {
       margin-left: 20px;

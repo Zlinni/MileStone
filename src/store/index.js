@@ -9,7 +9,7 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
       typeList: [{
         id: "001",
         type: "行测",
-        time: '11:00-15:00',
+        time: '12:40-12:42',
         remarks: '暂无'
       }]
     }, {
@@ -17,7 +17,7 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
       typeList: [{
         id: "001",
         type: "申论",
-        time: '13:00-15:00',
+        time: '15:00-16:00',
         remarks: '暂无'
       }]
     }],
@@ -167,90 +167,150 @@ var dataList = JSON.parse(localStorage.getItem('dataList')) || [{
     ],
   },
 ];
-var typeList = [];
+var typeList = JSON.parse(localStorage.getItem('typeList')) || [];
+var todoObj =  JSON.parse(localStorage.getItem("todoObj")) || [
+  {id: "X5DX4v8Wz4r97xjs", title: "阿斯顿", done: false}
+];
 import {
   nanoid
 } from 'nanoid';
-// actions mutation state
-const actions = {
+const dataListOptions = {
+  namespaced: true,
+  actions: {
+    transType(context, people) {
+      if (context.state.typeList.length > 0) {
+        context.state.typeList = [];
+      }
+      context.state.dataList.forEach(data => {
+        if (data.people === people) {
+          data.kemu.forEach(kemu => {
+            context.commit('TRANSTYPE', kemu.typeList);
+          })
+          localStorage.setItem('kemuLens',data.kemu.length);
+        }
+        localStorage.setItem('typeList', JSON.stringify(context.state.typeList));
+      });
+    },
+  },
 
-};
+  mutations: {
+    updatedType(state, [people, subject, typeId, typeValue]) {
+      console.log(typeValue);
+      state.dataList.forEach(data => {
+        if (data.people === people) {
+          data.kemu.forEach(kemu => {
+            if (kemu.subject === subject) {
+              kemu.typeList.forEach(typelist => {
+                if (typelist.id === typeId) {
+                  Vue.set(typelist, 'type', typeValue[0]);
+                  Vue.set(typelist, 'time', typeValue[2]);
+                  Vue.set(typelist, 'remarks', typeValue[1]);
+                }
+              })
+            }
+          })
+        }
+      });
+      localStorage.setItem('dataList', JSON.stringify(state.dataList));
+    },
+    deleteType(state, [people, subject, typeId]) {
+      state.dataList.forEach(data => {
+        if (data.people === people) {
+          data.kemu.forEach(kemu => {
+            if (kemu.subject === subject) {
+              kemu.typeList.forEach((typelist, index) => {
+                if (typelist.id === typeId) {
+                  kemu.typeList.splice(index, 1)
+                  console.log(kemu.typeList);
+                }
+              })
+            }
+          })
+        }
+      });
+      localStorage.setItem('dataList', JSON.stringify(state.dataList));
+    },
+    addType(state, [people, subject]) {
+      state.dataList.forEach(data => {
+        if (data.people === people) {
+          data.kemu.forEach(kemu => {
+            if (kemu.subject === subject) {
+              kemu.typeList.unshift({
+                id: nanoid(),
+                type: "新名称",
+                time: "时间",
+                remarks: "暂无"
+              })
+              console.log(kemu.typeList);
+            }
+          })
+        }
+      });
+      localStorage.setItem('dataList', JSON.stringify(state.dataList));
+    },
+    TRANSTYPE(state, value) {
+      value.forEach(item => {
+        state.typeList.push(item);
+      })
+    }
+  },
 
-const mutations = {
-  updatedType(state, [people, subject, typeId, typeValue]) {
-    console.log(typeValue);
-    state.dataList.forEach(data => {
-      if (data.people === people) {
-        data.kemu.forEach(kemu => {
-          if (kemu.subject === subject) {
-            kemu.typeList.forEach(typelist => {
-              if (typelist.id === typeId) {
-                Vue.set(typelist, 'type',typeValue[0]);
-                Vue.set(typelist, 'time',typeValue[2]);
-                Vue.set(typelist, 'remarks',typeValue[1]);
-              }
-            })
-          }
-        })
-      }
-    });
-    localStorage.setItem('dataList', JSON.stringify(state.dataList));
-  },
-  deleteType(state, [people, subject, typeId]) {
-    state.dataList.forEach(data => {
-      if (data.people === people) {
-        data.kemu.forEach(kemu => {
-          if (kemu.subject === subject) {
-            kemu.typeList.forEach((typelist, index) => {
-              if (typelist.id === typeId) {
-                kemu.typeList.splice(index, 1)
-                console.log(kemu.typeList);
-              }
-            })
-          }
-        })
-      }
-    });
-    localStorage.setItem('dataList', JSON.stringify(state.dataList));
-  },
-  addType(state, [people, subject]) {
-    state.dataList.forEach(data => {
-      if (data.people === people) {
-        data.kemu.forEach(kemu => {
-          if (kemu.subject === subject) {
-            kemu.typeList.unshift({
-              id: nanoid(),
-              type: "新名称",
-              time: "时间",
-              remarks: "暂无"
-            })
-            console.log(kemu.typeList);
-          }
-        })
-      }
-    });
-    localStorage.setItem('dataList', JSON.stringify(state.dataList));
-  },
-  transType(state,people){
-    state.dataList.forEach(data => {
-      if (data.people === people) {
-        data.kemu.forEach(kemu => {
-            console.log(kemu.typeList)
-        })
-      }
-    });
-    console.log(state.typeList);
-  },
-};
+  state: {
+    dataList: dataList,
+    typeList: typeList
+  }
+}
 
-const state = {
-  dataList: dataList,
-  typeList: typeList
-};
+const todoOptions = {
+  namespaced: true,
+  actions: {
+
+  },
+  mutations: {
+      addTodo(state, obj) {
+          state.todoObj.unshift(obj);
+          localStorage.setItem("todoObj", JSON.stringify(state.todoObj));
+      },
+      checkTodo(state, id) {
+          state.todoObj.forEach((todo) => {
+              if (todo.id === id) todo.done = !todo.done;
+          });
+          localStorage.setItem("todoObj", JSON.stringify(state.todoObj));
+      },
+      deleteTodo(state, id) {
+          state.todoObj = state.todoObj.filter((todo) => todo.id !== id);
+          localStorage.setItem("todoObj", JSON.stringify(state.todoObj));
+
+      },
+      clearTodo(state) {
+          state.todoObj = state.todoObj.filter((todo) => todo.done === false);
+          localStorage.setItem("todoObj", JSON.stringify(state.todoObj));
+
+      },
+      checkAllTodo(state, done) {
+          state.todoObj.forEach((todo) => {
+              todo.done = done;
+          });
+          localStorage.setItem("todoObj", JSON.stringify(state.todoObj));
+
+      },
+      updateTodo(state, [id, title]) {
+          state.todoObj.forEach((todo) => {
+              if (todo.id === id) todo.title = title;
+          });
+          localStorage.setItem("todoObj", JSON.stringify(state.todoObj));
+
+      },
+  },
+  state: {
+      todoObj:todoObj
+  },
+}
 
 // 创建并暴露store
 export default new vuex.Store({
-  actions,
-  mutations,
-  state
+  modules: {
+    dataListOptions,
+    todoOptions
+  }
 })

@@ -6,6 +6,7 @@
       :key="index"
       @mouseenter="currentIndex = index"
       @mouseleave="currentIndex = 'home'"
+      @click="isChoose"
     >
       <li class="peopleList">
         <i :class="['iconfont', items[index].icon]"></i>
@@ -19,7 +20,7 @@
           >{{ p.people }}
         </router-link>
       </li>
-      <collapse>
+      <v-expand-transition>
         <li class="showBooksBox" v-show="isActive(index)">
           <div class="showBooks" v-for="(k, index) in p.kemu" :key="index">
             <div class="imgBox">
@@ -32,7 +33,7 @@
             </div>
           </div>
         </li>
-      </collapse>
+      </v-expand-transition>
     </ul>
     <div v-if="getChoose">
       <router-view></router-view>
@@ -42,7 +43,6 @@
 
 <script>
 import { mapState } from "vuex";
-import collapse from "../plugins/collapse";
 export default {
   name: "customProject",
   data() {
@@ -55,21 +55,18 @@ export default {
       ],
       people: "",
       currentIndex: "home",
+      getChoose:localStorage.getItem("choose") || false
     };
   },
   components: {
-    collapse,
   },
   computed: {
-    getChoose() {
-      let choose = localStorage.getItem("choose") || true;
-      return choose;
-    },
-    ...mapState({ dataList: "dataList" }),
+    ...mapState("dataListOptions",["dataList"]),
   },
   methods: {
     isChoose() {
       localStorage.setItem("choose", true);
+      this.getChoose = localStorage.getItem("choose");
     },
     isActive(index) {
       if (this.currentIndex === index) {
@@ -79,6 +76,7 @@ export default {
       }
     },
   },
+
 };
 </script>
 

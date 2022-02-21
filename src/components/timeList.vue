@@ -98,7 +98,7 @@ export default {
   computed: {
     typeList() {
       let res = [];
-      this.$store.state.dataList.forEach((data) => {
+      this.$store.state.dataListOptions.dataList.forEach((data) => {
         if (data.people === this.people) {
           data.kemu.forEach((kemu) => {
             if (kemu.subject === this.subject) {
@@ -127,7 +127,7 @@ export default {
           : res;
       }, []);
       typeValue.push(this.start+'-'+this.end);
-      this.$store.commit("updatedType", [
+      this.$store.commit("dataListOptions/updatedType", [
         this.people,
         this.subject,
         typeId,
@@ -135,7 +135,7 @@ export default {
       ]);
     },
     isDelete(typeId) {
-      this.$store.commit("deleteType", [this.people, this.subject, typeId]);
+      this.$store.commit("dataListOptions/deleteType", [this.people, this.subject, typeId]);
       this.currentIndex = "home";
     },
   },
@@ -186,4 +186,5 @@ export default {
     color: white;
   }
 }
+
 </style>

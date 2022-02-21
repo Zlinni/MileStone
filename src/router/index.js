@@ -1,6 +1,7 @@
 import vuerouter from 'vue-router'
 import customProject from '../components/customProject.vue'
 import studyProject from '../components/studyProject.vue'
+import summary from '../components/summary.vue'
 import timeBar from '../components/timeBar.vue'
 export default new vuerouter({
     routes:[
@@ -11,7 +12,12 @@ export default new vuerouter({
         {
             path:'/studyProject',
             component:studyProject,
-            meta:{title:'里程碑',subtitle:'现在开始你的学习计划',currentIndex:0},
+            meta:{currentIndex:0},
+        },
+        {
+            path:'/summary',
+            component:summary,
+            meta:{currentIndex:1},
         },
         {
             path:'/customProject',
@@ -23,6 +29,6 @@ export default new vuerouter({
                 component:timeBar,
                 meta:{title:'规划时间',subtitle:'请在右侧规划任务和时间'}
             }]
-        }
+        },
     ]
 })

@@ -5,8 +5,8 @@
       ><a href="/#/customProject"
         ><i :class="['iconfont', 'icon-guanbi']"></i></a
     ></span>
-    <div class="prevSub" @mouseover="prevSub">&lt;</div>
-    <div class="nextSub" @mouseover="nextSub">&gt;</div>
+    <div class="prevSub" @mouseover="transSub('prev')">&lt;</div>
+    <div class="nextSub" @mouseover="transSub('next')">&gt;</div>
     <div class="subBox" ref="subBox">
       <label
         class="subject"
@@ -37,7 +37,9 @@
             style="font-size: 30px"
             @click="addType"
           ></i>
-          <v-btn light width="100px" @click="sendTypeArr">确定</v-btn>
+          <v-btn light width="100px" @click.native="sendTypeArr"
+            ><p style="color: black">确定</p></v-btn
+          >
         </span>
       </v-col>
     </v-row>
@@ -51,6 +53,8 @@ export default {
     return {
       subject: "",
       currentIndex: "home",
+      next: 0,
+      prev: 0,
     };
   },
   components: {
@@ -59,7 +63,7 @@ export default {
   computed: {
     kemu() {
       let res = [];
-      this.$store.state.dataList.forEach((data) => {
+      this.$store.state.dataListOptions.dataList.forEach((data) => {
         if (data.people === this.$route.params.people) {
           res = data.kemu;
         }
@@ -72,23 +76,37 @@ export default {
       this.subject = subject;
       this.currentIndex = index;
     },
-    nextSub() {
-      if (this.kemu.length > 3) {
-        let subbox = this.$refs.subBox;
-        subbox.style.transform = "translateX(-33.5%)";
-      }
-    },
-    prevSub() {
-      if (this.kemu.length > 3) {
-        let subbox = this.$refs.subBox;
-        subbox.style.transform = "translateX(0)";
+    transSub(type) {
+      let subBox = this.$refs.subBox;
+      let len = this.kemu.length;
+      let count = parseInt(len / 4);
+      var transX = null;
+      if (count > 0) {
+        if (type === "next" && this.next < count) {
+          this.next++;
+          this.prev++;
+          transX = this.next * -33.5 + "%";
+        } else if (type === "prev" && this.prev > 0) {
+          this.next--;
+          this.prev--;
+          transX = this.prev * -33.5 + "%";
+        }
+        subBox.style.transform = `translateX(${transX})`;
       }
     },
     addType() {
-      this.$store.commit("addType", [this.$route.params.people, this.subject]);
+      this.$store.commit("dataListOptions/addType", [
+        this.$route.params.people,
+        this.subject,
+      ]);
     },
     sendTypeArr() {
-      this.$store.commit("transType",this.$route.params.people);
+      this.$store.dispatch(
+        "dataListOptions/transType",
+        this.$route.params.people
+      );
+
+      this.$router.push("/studyProject");
     },
   },
 };
