@@ -8,13 +8,13 @@
 匹配当前时间和所有任务 找到最近的任务
 
 # 构建工具+技术栈
-编译软件：vscode
-开发框架: vue2
-打包工具：vue-cli
-UI：vuetify
-icon：阿里巴巴
-其他：vuex， vue-router，git
-插件：pubsub，nanoid，less-loader，vuex-persist
+1. 编译软件：vscode
+2. 开发框架: vue2
+3. 打包工具：vue-cli
+4. UI：vuetify
+5. icon：阿里巴巴
+6. 其他：vuex， vue-router，git
+7. 插件：pubsub，nanoid，less-loader，vuex-persist
 
 # 项目难点
 本次项目综合了很多方面的问题，比如vuex模块化加数据持久化，对所有任务的时间排序，以及vuetify的栅格系统等等，各种方面的问题哈哈，但好在最后都能够解决出来
